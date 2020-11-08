@@ -1,6 +1,8 @@
 {
-  "!youtube": "Voici le lien du channel YouTube : url. Abonne toi, si t'aimes les vidéos",
-  "!twitter": "Voici le lien du Twitter : url. Follow si tu veux être au courant des prochains streams",
+  "!help": "Commandes : !youtube, !newsletter, !twitter, !git, !dons",
+  "!youtube": "Voici le lien du channel YouTube : bit.ly/codisco-yt. Abonne toi, si t'aimes les vidéos",
+  "!twitter": "Voici le lien du Twitter : bit.ly/codisco-twitter. Follow si tu veux être au courant des prochains streams",
   "!git": "Voici le lien du repo Github: https://github.com/kadiks/codiscovery_twitch_bot",
-  "!dons": "Merci de penser à moi, voici le lien pour supporter le channel"
+  "!dons": "Merci de penser à moi, voici le lien pour supporter le stream",
+  "!newsletter": "Pour recevoir les contenus originaux, inscrivez-vous à la newsletter : bit.ly/codisco-news"
 }

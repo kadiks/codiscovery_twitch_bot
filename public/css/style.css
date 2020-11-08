@@ -1,0 +1,9 @@
+body {
+  background-color: indianred;
+}
+
+.sprite {
+  background-image: url(../img/sprites/zero.png);
+  height: 50px;
+  width: 23px;
+}
