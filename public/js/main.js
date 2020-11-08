@@ -1,12 +1,19 @@
 var stage, w, h, loader;
-var zero;
+var zero, tooltip, tooltipText;
 
-window.addEventListener("load", init);
+window.addEventListener("load", initialize);
+
+function initialize() {
+  var socket = io();
+
+  socket.on("avatar:message", (message) => {
+    tooltipText.text = message;
+  });
+  init();
+}
 
 function init() {
-  stage = new createjs.StageGL("testCanvas", {
-    transparent: true,
-  });
+  stage = new createjs.Stage("testCanvas");
 
   // grab canvas width and height for later calculations:
   w = stage.canvas.width;
@@ -33,13 +40,36 @@ function handleComplete() {
   zero = new createjs.Sprite(spriteSheet, "walkRight");
   zero.y = h - zero.getBounds().height;
 
-  console.log("w", w);
+  tooltip = new createjs.Container();
+  var tooltipBg = new createjs.Shape();
 
-  stage.addChild(zero);
+  tooltipText = new createjs.Text("Hello world", "20px Arial");
+  tooltipBg.graphics
+    .beginFill("#FFFFFF")
+    .drawRect(
+      0,
+      0,
+      tooltipText.getBounds().width + 30,
+      tooltipText.getBounds().height + 10
+    );
+
+  tooltip.addChild(tooltipBg, tooltipText);
+
+  //   var boundsTooltip = tooltip.getBounds();
+  //   tooltip.cache(
+  //     boundsTooltip.x,
+  //     boundsTooltip.y,
+  //     boundsTooltip.width,
+  //     boundsTooltip.height
+  //   );
+
+  stage.addChild(zero, tooltip);
   // stage.addEventListener("stagemousedown", handleJumpStart);
 
   createjs.Ticker.timingMode = createjs.Ticker.RAF;
   createjs.Ticker.addEventListener("tick", tick);
+
+  //   stage.update();
 }
 
 var zeroD = 1;
@@ -49,7 +79,7 @@ function tick(event) {
   // var position = grant.x + 150 * deltaS;
   var position = zero.x + zero.getBounds().width + 150 * deltaS;
 
-  var zeroS = 2;
+  var zeroS = 0.5;
 
   if (zeroD === 1) {
     if (position >= w) {
@@ -67,7 +97,21 @@ function tick(event) {
   //   console.log("zeroD", zeroD);
   //   console.log("position", position);
   //   console.log("zeroS", zeroS);
+  //   console.log(tooltipText.getBounds().height);
   zero.x += zeroD * zeroS;
+  tooltip.x = zero.x;
+  tooltip.y = h - zero.getBounds().height - tooltipText.getBounds().height;
+
+  //   tooltipText.text = "érfdregz";
+  //   var boundsTooltip = tooltipText.getBounds();
+  //   tooltipText.cache(
+  //     boundsTooltip.x,
+  //     boundsTooltip.y,
+  //     boundsTooltip.width,
+  //     boundsTooltip.height
+  //   );
+
+  //   tooltip.update();
 
   //   var zeroW = zero.getBounds().width * zero.scaleX;
 

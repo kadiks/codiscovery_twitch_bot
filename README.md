@@ -2,6 +2,7 @@
 
 ## TODO
 
+- [ ] Create a debounce on the avatar message trigger to take only the last message
 - [ ] When querying politeness message, do not duplicate messages by id
 
 ## Use cases

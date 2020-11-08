@@ -1,7 +1,10 @@
 require("dotenv").config();
 
+const http = require("http");
 const express = require("express");
+const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
+let socket = null;
 
 const { DB_NAME, DB_USERNAME, DB_PASSWORD } = process.env;
 
@@ -23,10 +26,19 @@ mongoose
 const MessageModel = require("./models/message");
 
 const app = express();
+const server = http.createServer(app);
+const io = require("socket.io")(server);
 
 const port = process.env.PORT || 3000;
 
 app.use(express.static("public"));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
+
+io.on("connection", (curSocket) => {
+  console.log("user connected");
+  socket = curSocket;
+});
 
 app.get("/", (req, res) => {
   res.send("Homepage");
@@ -57,12 +69,18 @@ app.get(
   }
 );
 
-app.get("/overlay", (req, res) => {
-  res.send(
-    '<link rel="stylesheet" href="/css/style.css" /><canvas width="600" height="150" id="testCanvas"></canvas><div class="sprite" data-char-name="zero" /><script src="https://code.createjs.com/1.0.0/createjs.min.js"></script><script src="https://code.createjs.com/1.0.0/easeljs.min.js"></script><script src="/js/main.js"></script>'
-  );
+app.post("/api/avatars/messages/", (req, res) => {
+  const { message } = req.body;
+
+  console.log("POST /api/avatars/messages/ req.body", req.body);
+  console.log("POST /api/avatars/messages/ message", message.text);
+
+  // io.emit("avatar:message", message.text);
+  io.emit("avatar:message", `${message.displayName}\n${message.text}`);
+
+  res.send("ok");
 });
 
-app.listen(port, () => {
+server.listen(port, () => {
   console.log(`Server started on port: ${port}`);
 });

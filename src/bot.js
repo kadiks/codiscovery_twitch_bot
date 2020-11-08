@@ -2,9 +2,14 @@ require("dotenv").config();
 
 const tmi = require("tmi.js");
 const mongoose = require("mongoose");
+const axios = require("axios");
 
 const commands = require("../config/commands.json");
+const politenessList = require("../config/politeness.json");
+const supportList = require("../config/support.json");
 const MessageModel = require("./models/message");
+
+const avatarTriggers = politenessList.concat(supportList);
 
 const {
   TWITCH_BOT_USERNAME,
@@ -69,6 +74,19 @@ const onMessageHandler = async (target, context, msg, self) => {
     const commandIndex = commandKeys.indexOf(msg.trim().toLowerCase());
     const reply = Object.values(commands)[commandIndex];
     client.say(target, reply);
+  }
+
+  let isAvatarTriggered = false;
+
+  avatarTriggers.forEach((avatarTrigger) => {
+    if (msg.toLowerCase().includes(avatarTrigger) === true) {
+      isAvatarTriggered = true;
+      return;
+    }
+  });
+
+  if (isAvatarTriggered) {
+    axios.post("http://localhost:3000/api/avatars/messages/", { message });
   }
 
   await MessageModel.insert({ data: message });
